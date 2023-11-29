@@ -12,12 +12,14 @@ podmanでGUIアプリを動かすまでの軌跡
 ---
 
 ## chromeを動かす
-> $ vi Containerfile
-> $ podman build -t test:v1 .
-> $ vi seccomp_profile.json
-> $ podman run -it --rm -e DISPLAY=${DISPLAY} -v /tmp/.X11-unix:/tmp/.X11-unix --ipc=host --user pwuser --security-opt seccomp=seccomp_profile.json localhost/test:v1 google-chrome
+```
+$ vi Containerfile
+$ podman build -t test:v1 .
+$ vi seccomp_profile.json
+$ podman run -it --rm -e DISPLAY=${DISPLAY} -v /tmp/.X11-unix:/tmp/.X11-unix --ipc=host --user pwuser --security-opt seccomp=seccomp_profile.json localhost/test:v1 google-chrome
+```
 
-## Containerfile
+* Containerfile
 ```
 FROM mcr.microsoft.com/playwright:jammy
 RUN apt-get update && apt-get install -y ca-certificates curl git ssh \
@@ -27,7 +29,7 @@ RUN apt-get update && apt-get install -y ca-certificates curl git ssh \
  && rm -rf /var/lib/apt/lists/*
 ```
 
-## seccomp_profile.json
+* seccomp_profile.json
 ```
 {
   "comment": "Allow create user namespaces",
@@ -56,9 +58,13 @@ RUN apt-get update && apt-get install -y ca-certificates curl git ssh \
 ---
 ## Podを生成してみる
 ---
+
+```
 $ podman pod create pw-pod
 $ podman container run --pod=pw-pod -it -e DISPLAY=${DISPLAY} -v /tmp/.X11-unix:/tmp/.X11-unix --ipc=host --user pwuser --security-opt seccomp=seccomp_profile.json localhost/test:v1 google-chrome
 $ podman generate kube pw-pod
+```
+
 ```
 # Save the output of this file and use kubectl create -f to import
 # it into Kubernetes.
@@ -96,16 +102,22 @@ spec:
       type: Directory
     name: tmp-.X11-unix-host-0
 ```
-$ mkdir test
+
 ## Containerfileはイメージ名のディレクトリの下に配置
+```
+$ mkdir test
 $ mv Containerfile ./test/
 $ podman pod rm -f pw-pod
 $ podman system prune --volumes
+```
+
 ## 起動
+```
 $ podman play kube pw-pod.yml
+```
 
 ## TODO
 * podファイル生成したときにいろいろオプションが無くなってるけど大丈夫か？
-> --ipc=host
-> --security-opt seccomp_profile.json
-> ユーザーの指定はIDなの？とか
+  * --ipc=host
+  * --security-opt seccomp_profile.json
+  * ユーザーの指定はIDなの？とか
