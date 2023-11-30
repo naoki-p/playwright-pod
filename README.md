@@ -121,3 +121,12 @@ $ podman play kube pw-pod.yml
   * --ipc=host
   * --security-opt seccomp_profile.json
   * ユーザーの指定はIDなの？とか
+
+## WSLの別のディストリビューションから繋ぐ
+> https://zenn.dev/dozo/articles/39d90d1e47f7ae
+* Ubuntuのdevパッケージからpodmanをインストール
+* /mnt/wsl/に生えてるpodman-socketに繋ぐ
+```
+export CONTAINER_HOST=unix:///mnt/wsl/podman-sockets/podman-machine-default/podman-user.sock
+```
+* warningが出る。rootfulにすれば出ない※要確認
