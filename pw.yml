@@ -18,9 +18,13 @@ spec:
       value: :0
     image: localhost/playwright:v1
     name: playwright
+    hostIPC: true
     securityContext:
       runAsGroup: 1000
       runAsUser: 1000
+      seccompProfile:
+        type: Localhost
+        localhostProfile: playwright/seccomp_profile.json
     stdin: true
     tty: true
     volumeMounts:

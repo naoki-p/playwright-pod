@@ -116,12 +116,6 @@ $ podman system prune --volumes
 $ podman play kube pw-pod.yml
 ```
 
-## TODO
-* podファイル生成したときにいろいろオプションが無くなってるけど大丈夫か？
-  * --ipc=host
-  * --security-opt seccomp_profile.json
-  * ユーザーの指定はIDなの？とか
-
 ## WSLの別のディストリビューションから繋ぐ
 > https://zenn.dev/dozo/articles/39d90d1e47f7ae
 * Ubuntuのdevパッケージからpodmanをインストール
@@ -130,3 +124,18 @@ $ podman play kube pw-pod.yml
 export CONTAINER_HOST=unix:///mnt/wsl/podman-sockets/podman-machine-default/podman-user.sock
 ```
 * warningが出る。rootfulにすれば出ない※要確認
+
+## generateで抜けたsecoptとか
+* Kubernetes と seccomp を組み合わせてシステムコールを制限する
+> https://kakakakakku.hatenablog.com/entry/2021/07/05/095346
+* 公式仕様書
+> https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#pod-v1-core
+
+```
+    hostIPC: true
+    securityContext:
+      ...
+      seccompProfile:
+        type: Localhost
+        localhostProfile: playwright/seccomp_profile.json
+```
