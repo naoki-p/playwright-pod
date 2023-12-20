@@ -123,7 +123,7 @@ $ podman play kube pw-pod.yml
 ```
 export CONTAINER_HOST=unix:///mnt/wsl/podman-sockets/podman-machine-default/podman-user.sock
 ```
-* warningが出る。rootfulにすれば出ない※要確認
+* podmanの-r(--remote)オプション必須
 
 ## generateで抜けたsecoptとか
 * Kubernetes と seccomp を組み合わせてシステムコールを制限する
